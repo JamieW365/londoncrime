@@ -1,7 +1,11 @@
 LondonCrime
 ==============================
 
-A short description of the project.
+In this project I will explore the past decade of recorded crime in London. I will look for any trends in crime and vizualise the most at risk London boroughs by crime type.
+
+The data for this exploration can be found on the opensource London Datastore:
+* https://data.london.gov.uk/dataset/mps-monthly-crime-dahboard-data 
+* https://data.london.gov.uk/dataset/land-area-and-population-density-ward-and-borough
 
 Project Organization
 ------------
