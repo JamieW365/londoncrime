@@ -66,8 +66,8 @@ def get_raw_data(local: bool = True,
         
         # Save raw data to local directory
         if overwrite:
-            df_current.to_csv(os.path.join(raw_loc, 'current.csv'))
-            df_historical.to_csv(os.path.join(raw_loc, 'historical.csv'))
+            df_current.to_csv(os.path.join(raw_loc, 'current.csv'), index=False)
+            df_historical.to_csv(os.path.join(raw_loc, 'historical.csv'), index=False)
 
     return df_current, df_historical
 
