@@ -1,12 +1,14 @@
 import pandas as pd
-import os
+from os.path import join
+from os import environ
 import sys
 import pandas as pd
+from src.utils import get_root_dir
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 
-def get_raw_data(local: bool = True,
-                 raw_loc: str = None,
+def get_raw_data(local: bool = False,
+                 raw_loc: str = join(get_root_dir(), 'data/raw'), 
                  url_current: str = None,
                  url_historical: str = None,
                  overwrite: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -46,28 +48,25 @@ def get_raw_data(local: bool = True,
     # Load environment variables
     load_dotenv(find_dotenv())
 
-    if raw_loc == None:
-        raw_loc = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'data/raw/'))
-
     # Retrieve raw data from local directory
     if local:
-        df_current = pd.read_csv(os.path.join(raw_loc, 'current.csv'))
-        df_historical = pd.read_csv(os.path.join(raw_loc, 'historical.csv'))
+        df_current = pd.read_csv(join(raw_loc, 'current.csv'))
+        df_historical = pd.read_csv(join(raw_loc, 'historical.csv'))
     # Reload fresh raw data from government website
     else:
         if url_current == None:
-            url_current = os.environ.get("URL_CURRENT")
+            url_current = environ.get("URL_CURRENT")
 
         if url_historical == None:
-            url_historical = os.environ.get("URL_HISTORICAL")
+            url_historical = environ.get("URL_HISTORICAL")
 
-        df_current = pd.read_csv(os.environ.get("URL_CURRENT"))
-        df_historical = pd.read_csv(os.environ.get("URL_HISTORICAL"))
+        df_current = pd.read_csv(environ.get("URL_CURRENT"))
+        df_historical = pd.read_csv(environ.get("URL_HISTORICAL"))
         
         # Save raw data to local directory
         if overwrite:
-            df_current.to_csv(os.path.join(raw_loc, 'current.csv'), index=False)
-            df_historical.to_csv(os.path.join(raw_loc, 'historical.csv'), index=False)
+            df_current.to_csv(join(raw_loc, 'current.csv'), index=False)
+            df_historical.to_csv(join(raw_loc, 'historical.csv'), index=False)
 
     return df_current, df_historical
 

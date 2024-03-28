@@ -10,4 +10,4 @@ def get_root_dir() -> str:
     Returns the absolute path of the project root directory.
     '''
 
-    return str(Path(os.path.abspath(__file__)).parents[5])
+    return str(Path(os.path.abspath(__file__)).parents[1])

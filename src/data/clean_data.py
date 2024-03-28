@@ -1,5 +1,6 @@
 import pandas as pd
-import os
+import sys
+from os.path import join, abspath, dirname
 
 def combine_data(df_current: pd.DataFrame,
                  df_historical: pd.DataFrame) -> pd.DataFrame:
@@ -25,7 +26,7 @@ def combine_data(df_current: pd.DataFrame,
 
     df_total = df_historical.merge(df_current, how='outer', on=('Major', 'Minor', 'Borough')).fillna(0)
 
-    df_total.to_csv(os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'data/interim/total_crime.csv')), index=False)
+    df_total.to_csv(abspath(join(dirname( __file__ ), '../..', 'data/interim/total_crime.csv')), index=False)
 
     return df_total
 
