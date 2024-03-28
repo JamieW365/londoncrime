@@ -1,9 +1,12 @@
 import pandas as pd
 import sys
 from os.path import join, abspath, dirname
+from src.utils import get_root_dir
 
 def combine_data(df_current: pd.DataFrame,
-                 df_historical: pd.DataFrame) -> pd.DataFrame:
+                 df_historical: pd.DataFrame,
+                 output_filepath: str = join(get_root_dir(), 'data/interim'),
+                 overwrite: bool = True) -> pd.DataFrame:
 
     '''
     Combine current and historical crime data into a single interim data set
@@ -26,7 +29,8 @@ def combine_data(df_current: pd.DataFrame,
 
     df_total = df_historical.merge(df_current, how='outer', on=('Major', 'Minor', 'Borough')).fillna(0)
 
-    df_total.to_csv(abspath(join(dirname( __file__ ), '../..', 'data/interim/total_crime.csv')), index=False)
+    if overwrite:
+        df_total.to_csv(join(output_filepath, 'total_crime.csv'), index=False)
 
     return df_total
 
