@@ -19,8 +19,6 @@ def main(input_filepath: str = join(get_root_dir(), 'data/raw'),
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
 
-    print(input_filepath, output_filepath)
-
     # Get current and historical raw data
     df_current, df_historical = get_raw_data(raw_loc=input_filepath)
 
