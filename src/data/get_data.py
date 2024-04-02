@@ -3,14 +3,16 @@ from os.path import join
 from os import environ
 import sys
 import pandas as pd
+import requests
 from src.utils import get_root_dir
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 
-def get_raw_data(local: bool = False,
+def get_raw_data(local: bool = True,
                  raw_loc: str = join(get_root_dir(), 'data/raw'), 
                  url_current: str = None,
                  url_historical: str = None,
+                 url_population: str = None,
                  overwrite: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     '''
@@ -52,6 +54,7 @@ def get_raw_data(local: bool = False,
     if local:
         df_current = pd.read_csv(join(raw_loc, 'current.csv'))
         df_historical = pd.read_csv(join(raw_loc, 'historical.csv'))
+        df_population = pd.read_csv(join(raw_loc, 'population.csv'))
     # Reload fresh raw data from government website
     else:
         if url_current == None:
@@ -60,15 +63,20 @@ def get_raw_data(local: bool = False,
         if url_historical == None:
             url_historical = environ.get("URL_HISTORICAL")
 
-        df_current = pd.read_csv(environ.get("URL_CURRENT"))
-        df_historical = pd.read_csv(environ.get("URL_HISTORICAL"))
+        if url_population == None:
+            url_population = environ.get("URL_POP_BOROUGH")
+
+        df_current = pd.read_csv(url_current)
+        df_historical = pd.read_csv(url_historical)
+        df_population = pd.read_csv(url_population)
         
         # Save raw data to local directory
         if overwrite:
             df_current.to_csv(join(raw_loc, 'current.csv'), index=False)
             df_historical.to_csv(join(raw_loc, 'historical.csv'), index=False)
+            df_population.to_csv(join(raw_loc, 'population.csv'), index=False)
 
-    return df_current, df_historical
+    return df_current, df_historical, df_population
 
 if __name__ == '__main__':
 

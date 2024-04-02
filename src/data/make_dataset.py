@@ -20,18 +20,18 @@ def main(input_filepath: str = join(get_root_dir(), 'data/raw'),
     logger.info('making final data set from raw data')
 
     # Get current and historical raw data
-    df_current, df_historical = get_raw_data(raw_loc=input_filepath)
+    df_current, df_historical, df_population = get_raw_data(raw_loc=input_filepath)
 
     # Generate merged interim data, combining current and historical data
     df_total = combine_data(df_current, df_historical)
 
     # Restructure total data set to time-series
-    df_reshaped = restructure_data(df_total)
+    df_reshaped = restructure_data(df_total, df_population)
 
     # Save complete dataset
     if overwrite:
         df_reshaped.to_csv(join(output_filepath, 'final.csv'), index=False)
-    
+
     return df_reshaped
 
 if __name__ == '__main__':

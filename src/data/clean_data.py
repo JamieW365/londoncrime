@@ -34,18 +34,29 @@ def combine_data(df_current: pd.DataFrame,
 
     return df_total
 
-def restructure_data(df: pd.DataFrame) -> pd.DataFrame:
+def restructure_data(df_crime: pd.DataFrame,
+                     df_population: pd.DataFrame) -> pd.DataFrame:
 
     '''
     Transform data into time-series
     '''
 
     # By stacking the data we can merge all date columns into a single column which can be used for time-series analysis
-    df_reshaped = df.set_index(['Major', 'Minor', 'Borough']).stack().reset_index().rename(columns={'level_3': 'Date',
-                                                                                                     0: 'Count'})
+    df_reshaped = df_crime.set_index(['Major', 'Minor', 'Borough']).stack().reset_index().rename(columns={'level_3': 'Date',
+                                                                                                          0: 'Count'})
     
     # Convert year month filed from integer to type date-time
     df_reshaped['Date'] = pd.to_datetime(df_reshaped['Date'], format='%Y%m')
+
+    # Save year for population merging
+    df_reshaped['Year'] = df_reshaped['Date'].dt.year
+
+    # Merge yearly population
+    df_reshaped = df_reshaped.merge(df_population[['Name', 'Population', 'Year']], 
+                                    how='inner', 
+                                    left_on=['Borough', 'Year'], 
+                                    right_on=['Name', 'Year']) \
+                             .drop(['Name', 'Year'], axis=1)
 
     return df_reshaped
 
