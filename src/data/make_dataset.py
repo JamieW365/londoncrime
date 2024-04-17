@@ -8,6 +8,7 @@ import pandas as pd
 from src.utils import get_root_dir
 from src.data.get_data import get_raw_data
 from src.data.clean_data import combine_data, restructure_data
+from src.features.build_features import count_per_pop
 
 def main(input_filepath: str = join(get_root_dir(), 'data/raw'), 
          output_filepath: str = join(get_root_dir(), 'data/processed'),
@@ -23,16 +24,18 @@ def main(input_filepath: str = join(get_root_dir(), 'data/raw'),
     df_current, df_historical, df_population = get_raw_data(raw_loc=input_filepath)
 
     # Generate merged interim data, combining current and historical data
-    df_total = combine_data(df_current, df_historical)
+    df_crime = combine_data(df_current, df_historical)
 
     # Restructure total data set to time-series
-    df_reshaped = restructure_data(df_total, df_population)
+    df = restructure_data(df_crime, df_population)
+
+    df = count_per_pop(df)
 
     # Save complete dataset
     if overwrite:
-        df_reshaped.to_csv(join(output_filepath, 'final.csv'), index=False)
+        df.to_csv(join(output_filepath, 'final.csv'), index=False)
 
-    return df_reshaped
+    return df
 
 if __name__ == '__main__':
 
