@@ -10,6 +10,13 @@ def get_model(name: str = None,
 
     return pickle.load(open(os.path.join(filepath, f'{name}.pkl'), 'rb'))
 
+def save_model(model,
+               model_name: str = None,
+               output_filepath: str = os.path.join(get_root_dir(), 'models')):
+    
+        with open(os.path.join(output_filepath, f'{model_name}.pkl'), 'wb') as file:  
+            pickle.dump(model, file)
+
 def build_arima(df: pd.DataFrame = None,
                 field: str | list[str] = 'Major',
                 values: str | list[str] = None,
@@ -43,8 +50,7 @@ def build_arima(df: pd.DataFrame = None,
                               suppress_warnings=True, 
                               stepwise=True)
         
-        with open(os.path.join(output_filepath, f'{item}.pkl'), 'wb') as file:  
-            pickle.dump(model, file)
+        save_model(model, item, output_filepath)
   
 def build_all_models(df: pd.DataFrame = None,
                      build_borough: bool = True,
