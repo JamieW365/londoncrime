@@ -5,6 +5,11 @@ import pmdarima as pm
 import pickle
 import os
 
+def get_model(name: str = None,
+              filepath: str = os.path.join(get_root_dir(), 'models')):
+
+    return pickle.load(open(os.path.join(filepath, f'{name}.pkl'), 'rb'))
+
 def build_arima(df: pd.DataFrame = None,
                 field: str | list[str] = 'Major',
                 values: str | list[str] = None,
@@ -40,9 +45,7 @@ def build_arima(df: pd.DataFrame = None,
         
         with open(os.path.join(output_filepath, f'{item}.pkl'), 'wb') as file:  
             pickle.dump(model, file)
-
-        
-
+  
 def build_all_models(df: pd.DataFrame = None,
                      build_borough: bool = True,
                      build_major: bool = True,
@@ -62,5 +65,5 @@ def build_all_models(df: pd.DataFrame = None,
 
 if __name__ == '__main__':
 
-    print('Running train_models')
-    build_all_models()
+    print('in train_model.py')
+    breakpoint()
